@@ -56,6 +56,14 @@ main() {
 bundle_code_server() {
   rsync out "$RELEASE_PATH"
 
+  mkdir -p "$RELEASE_PATH/bin" "$RELEASE_PATH/compatibility" "$RELEASE_PATH/ci/ai-extensions"
+  cp ci/build/code-server.sh "$RELEASE_PATH/bin/code-server"
+  cp ci/build/code-server.sh "$RELEASE_PATH/bin/jack-code-server"
+  cp ci/build/jack-code-server-doctor.sh "$RELEASE_PATH/bin/jack-code-server-doctor"
+  chmod 755 "$RELEASE_PATH/bin/code-server" "$RELEASE_PATH/bin/jack-code-server" "$RELEASE_PATH/bin/jack-code-server-doctor"
+  rsync compatibility/ "$RELEASE_PATH/compatibility"
+  rsync ci/ai-extensions/install.sh "$RELEASE_PATH/ci/ai-extensions/install.sh"
+
   # For source maps and images.
   mkdir -p "$RELEASE_PATH/src/browser"
   rsync src/browser/media/ "$RELEASE_PATH/src/browser/media"

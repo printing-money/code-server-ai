@@ -1,0 +1,3 @@
+jack-vscode.43-128-93-114.sslip.io {
+  reverse_proxy 127.0.0.1:8890
+}

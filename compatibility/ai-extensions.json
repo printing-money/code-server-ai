@@ -1,0 +1,22 @@
+{
+  "release": "4.129.0-jack.1",
+  "vscode": "1.129",
+  "extensions": [
+    {
+      "id": "openai.chatgpt",
+      "displayName": "OpenAI Codex",
+      "testedVersion": "26.623.141536",
+      "status": "runtime-verified",
+      "commands": ["git", "bwrap"],
+      "credentialFiles": ["~/.codex/auth.json"]
+    },
+    {
+      "id": "anthropic.claude-code",
+      "displayName": "Claude Code",
+      "testedVersion": "2.1.207",
+      "status": "install-verified",
+      "commands": ["git"],
+      "credentialFiles": ["~/.claude/.credentials.json"]
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 import { logger } from "@coder/logger"
 import { optionDescriptions, parse, readConfigFile, setDefaults, shouldOpenInExistingInstance } from "./cli"
 import { getVersionString, getVersionJsonString } from "./constants"
+import { prepareExtensionRuntime } from "./extensionRuntime"
 import { openInExistingInstance, runCodeServer, runCodeCli, shouldSpawnCliProcess } from "./main"
 import { isChild, wrapper } from "./wrapper"
 
@@ -45,6 +46,8 @@ async function entry(): Promise<void> {
     }
     return
   }
+
+  await prepareExtensionRuntime()
 
   if (shouldSpawnCliProcess(args)) {
     logger.debug("Found VS Code arguments; spawning VS Code CLI")

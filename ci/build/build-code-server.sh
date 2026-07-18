@@ -14,6 +14,7 @@ main() {
     sed -i.bak "1s;^;#!/usr/bin/env node\n;" out/node/entry.js && rm out/node/entry.js.bak
     chmod +x out/node/entry.js
   fi
+  chmod +x out/node/aiDoctor.js
 }
 
 main "$@"

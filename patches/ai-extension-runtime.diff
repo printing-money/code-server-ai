@@ -1,0 +1,14 @@
+Allow official AI extension hosts to use Node's global navigator
+
+Node 21+ exposes navigator globally. The Codex extension opts into that
+behavior, so keep the VS Code migration guard from turning a valid extension
+host launch into PendingMigrationError when Jack has explicitly enabled the
+compatibility runtime.
+
+Index: code-server/lib/vscode/src/vs/workbench/api/node/extensionHostProcess.ts
+===================================================================
+--- code-server.orig/lib/vscode/src/vs/workbench/api/node/extensionHostProcess.ts
++++ code-server/lib/vscode/src/vs/workbench/api/node/extensionHostProcess.ts
+@@ -142,1 +142,1 @@
+-if (!args.supportGlobalNavigator) {
++if (!args.supportGlobalNavigator && process.env.JACK_CODE_SERVER_ALLOW_GLOBAL_NAVIGATOR !== '1') {

@@ -1,0 +1,107 @@
+name: Jack release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Release version without a leading v
+        required: true
+        default: 4.129.0-jack.1
+        type: string
+
+permissions:
+  contents: write
+  packages: write
+
+concurrency:
+  group: jack-release-${{ inputs.version }}
+
+jobs:
+  package-linux:
+    name: Package linux-${{ matrix.vscode_arch }}
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        include:
+          - npm_arch: x64
+            vscode_arch: x64
+            package_arch: amd64
+          - npm_arch: arm64
+            vscode_arch: arm64
+            package_arch: arm64
+    env:
+      ARCH: ${{ matrix.package_arch }}
+      ELECTRON_SKIP_BINARY_DOWNLOAD: 1
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      npm_arch: ${{ matrix.npm_arch }}
+      npm_config_arch: ${{ matrix.npm_arch }}
+      npm_config_build_from_source: true
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+      VERSION: ${{ inputs.version }}
+      VSCODE_ARCH: ${{ matrix.vscode_arch }}
+      VSCODE_TARGET: linux-${{ matrix.vscode_arch }}
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+        with:
+          submodules: true
+      - run: sudo apt-get update && sudo apt-get install -y libkrb5-dev quilt rsync gettext-base
+      - run: quilt push -a
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - name: Install nfpm
+        run: |
+          curl -fsSL "https://github.com/goreleaser/nfpm/releases/download/v2.43.0/nfpm_2.43.0_Linux_x86_64.tar.gz" |
+            sudo tar -C /usr/local/bin -xzf - nfpm
+      - name: Build
+        run: |
+          cd lib/vscode/build
+          npm ci
+          cd ..
+          source ./build/azure-pipelines/linux/setup-env.sh
+          node build/npm/preinstall.ts
+          cd ../..
+          npm ci
+          npm run build
+          npm run build:vscode
+      - run: KEEP_MODULES=1 npm run release
+      - run: npm run package
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: jack-code-server-linux-${{ matrix.package_arch }}
+          path: release-packages/*
+      - uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda
+        with:
+          draft: true
+          files: release-packages/*
+          name: Jack Code Server v${{ inputs.version }}
+          tag_name: v${{ inputs.version }}
+
+  container:
+    name: Publish container
+    needs: package-linux
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          merge-multiple: true
+          path: release-packages
+          pattern: jack-code-server-linux-*
+      - uses: docker/setup-qemu-action@06116385d9baf250c9f4dcb4858b16962ea869c3
+      - uses: docker/setup-buildx-action@d7f5e7f509e45cec5c76c4d5afdd7de93d0b3df5
+      - uses: docker/login-action@650006c6eb7dba73a995cc03b0b2d7f5ca915bee
+        with:
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+      - name: Build and push
+        run: |
+          docker buildx build \
+            --file ci/release-image/Dockerfile \
+            --platform linux/amd64,linux/arm64 \
+            --push \
+            --tag "ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/jack-code-server:${{ inputs.version }}" \
+            --tag "ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/jack-code-server:latest" \
+            .

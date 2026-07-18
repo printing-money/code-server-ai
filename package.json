@@ -1,13 +1,13 @@
 {
-  "name": "code-server",
+  "name": "jack-code-server",
   "license": "MIT",
   "version": "0.0.0",
   "description": "Run VS Code on a remote server.",
-  "homepage": "https://github.com/coder/code-server",
+  "homepage": "https://github.com/printing-money/jack-code-server",
   "bugs": {
-    "url": "https://github.com/coder/code-server/issues"
+    "url": "https://github.com/printing-money/jack-code-server/issues"
   },
-  "repository": "https://github.com/coder/code-server",
+  "repository": "https://github.com/printing-money/jack-code-server",
   "scripts": {
     "clean": "./ci/build/clean.sh",
     "build": "./ci/build/build-code-server.sh",
@@ -91,7 +91,9 @@
     "@types/node": "22.x"
   },
   "bin": {
-    "code-server": "out/node/entry.js"
+    "code-server": "out/node/entry.js",
+    "jack-code-server": "out/node/entry.js",
+    "jack-code-server-doctor": "out/node/aiDoctor.js"
   },
   "keywords": [
     "vscode",

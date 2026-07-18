@@ -25,3 +25,5 @@ signature-verification.diff
 copilot.diff
 app-name.diff
 csp-hashes.diff
+ai-extension-runtime.diff
+build-esbuild-sequential.diff

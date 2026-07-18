@@ -10,7 +10,7 @@ fix-bin-script() {
   local script="lib/vscode-reh-web-$VSCODE_TARGET/bin/$1"
   sed -i.bak "s/@@VERSION@@/$(vscode_version)/g" "$script"
   sed -i.bak "s/@@COMMIT@@/$BUILD_SOURCEVERSION/g" "$script"
-  sed -i.bak "s/@@APPNAME@@/code-server/g" "$script"
+  sed -i.bak "s/@@APPNAME@@/jack-code-server/g" "$script"
 
   # Fix Node path on Darwin and Linux.
   # We do not want expansion here; this text should make it to the file as-is.
@@ -72,19 +72,19 @@ main() {
     "enableTelemetry": true,
     "quality": "stable",
     "codeServerVersion": "$VERSION",
-    "nameShort": "code-server",
-    "nameLong": "code-server",
+    "nameShort": "Jack Code Server",
+    "nameLong": "Jack Code Server",
     "applicationName": "code-server",
     "dataFolderName": ".code-server",
     "win32MutexName": "codeserver",
-    "licenseUrl": "https://github.com/coder/code-server/blob/main/LICENSE",
+    "licenseUrl": "https://github.com/printing-money/jack-code-server/blob/main/LICENSE",
     "win32DirName": "code-server",
     "win32NameVersion": "code-server",
     "win32AppUserModelId": "coder.code-server",
     "win32ShellNameShort": "c&ode-server",
     "darwinBundleIdentifier": "com.coder.code.server",
     "linuxIconName": "com.coder.code.server",
-    "reportIssueUrl": "https://github.com/coder/code-server/issues/new",
+    "reportIssueUrl": "https://github.com/printing-money/jack-code-server/issues/new",
     "documentationUrl": "https://go.microsoft.com/fwlink/?LinkID=533484#vscode",
     "keyboardShortcutsUrlMac": "https://go.microsoft.com/fwlink/?linkid=832143",
     "keyboardShortcutsUrlLinux": "https://go.microsoft.com/fwlink/?linkid=832144",
@@ -98,7 +98,8 @@ main() {
     "trustedExtensionAuthAccess": [
       "vscode.git", "vscode.github",
       "github.vscode-pull-request-github",
-      "github.copilot", "github.copilot-chat"
+      "github.copilot", "github.copilot-chat",
+      "openai.chatgpt", "anthropic.claude-code"
     ],
     "aiConfig": {
       "ariaKey": "code-server"

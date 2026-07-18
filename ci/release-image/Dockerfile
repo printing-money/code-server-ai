@@ -2,13 +2,14 @@
 
 ARG BASE=debian:13
 FROM scratch AS packages
-COPY release-packages/code-server*.deb /tmp/
+COPY release-packages/*code-server*.deb /tmp/
 
 FROM $BASE
 
 RUN apt-get update \
   && apt-get install -y \
     curl \
+    bubblewrap \
     dumb-init \
     git \
     git-lfs \
@@ -45,7 +46,7 @@ RUN ARCH="$(dpkg --print-architecture)" \
   && printf "user: coder\ngroup: coder\n" > /etc/fixuid/config.yml
 
 COPY ci/release-image/entrypoint.sh /usr/bin/entrypoint.sh
-RUN --mount=from=packages,src=/tmp,dst=/tmp/packages dpkg -i /tmp/packages/code-server*$(dpkg --print-architecture).deb
+RUN --mount=from=packages,src=/tmp,dst=/tmp/packages dpkg -i /tmp/packages/*code-server*$(dpkg --print-architecture).deb
 
 # Allow users to have scripts run on container startup to prepare workspace.
 # https://github.com/coder/code-server/issues/5177

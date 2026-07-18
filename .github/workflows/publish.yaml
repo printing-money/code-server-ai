@@ -22,6 +22,7 @@ concurrency:
 jobs:
   npm:
     runs-on: ubuntu-latest
+    if: github.repository == 'coder/code-server'
     env:
       TAG: ${{ inputs.version || github.ref_name }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -53,6 +54,7 @@ jobs:
 
   aur:
     runs-on: ubuntu-latest
+    if: github.repository == 'coder/code-server'
     timeout-minutes: 10
     env:
       GH_TOKEN: ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}
@@ -99,6 +101,7 @@ jobs:
 
   docker:
     runs-on: ubuntu-latest
+    if: github.repository == 'coder/code-server'
     env:
       GITHUB_TOKEN: ${{ github.token }}
       TAG: ${{ inputs.version || github.ref_name }}
@@ -139,6 +142,7 @@ jobs:
 
   repo:
     runs-on: ubuntu-latest
+    if: github.repository == 'coder/code-server'
     env:
       GH_TOKEN: ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}
       TAG: ${{ inputs.version || github.ref_name }}
