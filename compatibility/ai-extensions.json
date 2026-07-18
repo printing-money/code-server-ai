@@ -6,7 +6,15 @@
       "id": "openai.chatgpt",
       "displayName": "OpenAI Codex",
       "testedVersion": "26.623.141536",
-      "status": "runtime-verified",
+      "gallery": "open-vsx",
+      "publisherVerified": true,
+      "verification": {
+        "installation": "verified",
+        "activation": "verified",
+        "authenticatedRequest": "pending",
+        "singleTabStability": "pending",
+        "multiTabStability": "pending"
+      },
       "commands": ["git", "bwrap"],
       "credentialFiles": ["~/.codex/auth.json"]
     },
@@ -14,7 +22,15 @@
       "id": "anthropic.claude-code",
       "displayName": "Claude Code",
       "testedVersion": "2.1.207",
-      "status": "install-verified",
+      "gallery": "open-vsx",
+      "publisherVerified": true,
+      "verification": {
+        "installation": "verified",
+        "activation": "pending",
+        "authenticatedRequest": "pending",
+        "singleTabStability": "pending",
+        "multiTabStability": "pending"
+      },
       "commands": ["git"],
       "credentialFiles": ["~/.claude/.credentials.json"]
     }

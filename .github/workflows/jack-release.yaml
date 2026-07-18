@@ -65,6 +65,7 @@ jobs:
           npm ci
           npm run build
           npm run build:vscode
+      - run: ./ci/ai-extensions/acceptance.sh preflight
       - run: KEEP_MODULES=1 npm run release
       - run: npm run package
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a

@@ -32,6 +32,6 @@ for extension_id in "${ids[@]}"; do
     echo "No tested version for $extension_id" >&2
     exit 1
   fi
-  echo "Installing $extension_id@$version from the official VS Code Marketplace"
+  echo "Installing $extension_id@$version from Open VSX (verified publisher artifact)"
   "$command_name" --install-extension "$extension_id@$version"
 done

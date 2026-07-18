@@ -13,7 +13,9 @@ type ExtensionSpec = {
   id: string
   displayName: string
   testedVersion: string
-  status: string
+  gallery?: string
+  publisherVerified?: boolean
+  verification?: Record<string, string>
   commands?: string[]
   credentialFiles?: string[]
 }
@@ -150,6 +152,15 @@ export async function runAiDoctor(argv = process.argv.slice(2)): Promise<DoctorR
       status: manifest.version === extension.testedVersion ? "PASS" : "WARN",
       message: `${extension.id}@${manifest.version || "unknown"} (tested ${extension.testedVersion})`,
     })
+    for (const [stage, status] of Object.entries(extension.verification || {})) {
+      if (status !== "verified") {
+        checks.push({
+          name: `${extension.displayName} ${stage}`,
+          status: "WARN",
+          message: `acceptance status is ${status}`,
+        })
+      }
+    }
     for (const command of extension.commands || []) {
       checks.push({
         name: `${extension.displayName} prerequisite ${command}`,

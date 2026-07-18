@@ -32,6 +32,8 @@ main() {
   bundle_vscode
 
   rsync ./docs/README.md "$RELEASE_PATH"
+  rsync ./docs/ai-extensions.md "$RELEASE_PATH"
+  rsync ./docs/ai-extension-acceptance.md "$RELEASE_PATH"
   rsync LICENSE "$RELEASE_PATH"
   rsync ./lib/vscode/ThirdPartyNotices.txt "$RELEASE_PATH"
 
@@ -63,6 +65,7 @@ bundle_code_server() {
   chmod 755 "$RELEASE_PATH/bin/code-server" "$RELEASE_PATH/bin/jack-code-server" "$RELEASE_PATH/bin/jack-code-server-doctor"
   rsync compatibility/ "$RELEASE_PATH/compatibility"
   rsync ci/ai-extensions/install.sh "$RELEASE_PATH/ci/ai-extensions/install.sh"
+  rsync ci/ai-extensions/acceptance.sh "$RELEASE_PATH/ci/ai-extensions/acceptance.sh"
 
   # For source maps and images.
   mkdir -p "$RELEASE_PATH/src/browser"
