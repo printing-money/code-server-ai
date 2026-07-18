@@ -16,6 +16,14 @@ ssh -N -L 9443:127.0.0.1:443 root@81.70.32.51
 
 Open `https://jack-vscode.81-70-32-51.sslip.io:9443` and accept or trust Caddy's local CA. For a public deployment, replace `tls internal` with a certificate trusted by clients and open TCP 80/443 in the cloud firewall.
 
+The canary also exposes Caddy's HTTPS endpoint directly on host port `8888`:
+
+```text
+https://jack-vscode.81-70-32-51.sslip.io:8888
+```
+
+Direct access requires TCP `8888` to be open in the cloud firewall.
+
 Run the in-container checks after startup:
 
 ```sh

@@ -40,6 +40,7 @@ services:
     ports:
       - 80:80
       - 443:443
+      - 8888:443
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - jack-caddy-data:/data
