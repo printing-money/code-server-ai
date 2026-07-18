@@ -22,10 +22,22 @@ while [[ $# -gt 0 ]]; do
 done
 
 doctor="${JACK_CODE_SERVER_DOCTOR:-$root_dir/out/node/aiDoctor.js}"
+if [[ -n ${JACK_CODE_SERVER_NODE:-} ]]; then
+  node_bin="$JACK_CODE_SERVER_NODE"
+elif command -v node >/dev/null 2>&1; then
+  node_bin="$(command -v node)"
+elif [[ -x /usr/lib/code-server/lib/node ]]; then
+  node_bin="/usr/lib/code-server/lib/node"
+elif [[ -x /usr/local/lib/code-server/lib/node ]]; then
+  node_bin="/usr/local/lib/code-server/lib/node"
+else
+  echo "Unable to find a Node.js runtime" >&2
+  exit 1
+fi
 doctor_output="$(mktemp)"
 trap 'rm -f "$doctor_output"' EXIT
-node "$doctor" --extensions-dir "$extensions_dir" --user-data-dir "$user_data_dir" --json >"$doctor_output"
-jq -e '[.checks[] | select(.status == "FAIL")] | length == 0' "$doctor_output" >/dev/null
+"$node_bin" "$doctor" --extensions-dir "$extensions_dir" --user-data-dir "$user_data_dir" --json >"$doctor_output"
+"$node_bin" -e 'const report=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8"));if(report.checks.some((check)=>check.status==="FAIL"))process.exit(1)' "$doctor_output"
 
 if [[ "$mode" == preflight ]]; then
   echo "AI extension preflight passed; authenticated and browser stress checks remain pending."

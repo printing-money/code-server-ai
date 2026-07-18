@@ -5,7 +5,7 @@ import * as path from "path"
 describe("runAiDoctor", () => {
   it("checks the installed Codex extension and app-server log", async () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "jack-doctor-"))
-    const extensions = path.join(root, "extensions", "openai.chatgpt")
+    const extensions = path.join(root, "extensions", "openai.chatgpt-26.623.141536")
     const userData = path.join(root, "user-data", "logs", "session")
     await fs.mkdir(extensions, { recursive: true })
     await fs.mkdir(userData, { recursive: true })

@@ -136,9 +136,14 @@ export async function runAiDoctor(argv = process.argv.slice(2)): Promise<DoctorR
 
   for (const extension of matrix.extensions) {
     const extensionRoot = path.join(extensionsDir, extension.id)
-    const packageFiles = (await walk(extensionsDir)).filter((filePath) =>
-      filePath.endsWith(`${extension.id}/package.json`),
-    )
+    const packageFiles = (await walk(extensionsDir)).filter((filePath) => {
+      const parts = path.relative(extensionsDir, filePath).split(path.sep)
+      return (
+        parts.length === 2 &&
+        parts[1] === "package.json" &&
+        (parts[0] === extension.id || parts[0].startsWith(`${extension.id}-`))
+      )
+    })
     const manifestPath = (await exists(path.join(extensionRoot, "package.json")))
       ? path.join(extensionRoot, "package.json")
       : packageFiles[0]

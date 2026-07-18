@@ -1,0 +1,56 @@
+services:
+  jack-code-server:
+    build:
+      context: ../../..
+      dockerfile: deploy/docker/canary/Dockerfile
+    image: jack-code-server:4.129.0-jack.1-canary
+    container_name: jack-code-server-canary
+    restart: unless-stopped
+    environment:
+      PASSWORD: ${JACK_CODE_SERVER_PASSWORD:?set JACK_CODE_SERVER_PASSWORD}
+    command:
+      - --auth
+      - password
+      - --bind-addr
+      - 0.0.0.0:8080
+      - --disable-update-check
+      - /home/coder/project
+    volumes:
+      - /usr/bin/bwrap:/usr/bin/bwrap:ro
+      - /opt/jack-code-server-canary/state/code-server:/home/coder/.local/share/code-server
+      - /opt/jack-code-server-canary/state/config:/home/coder/.config/code-server
+      - /opt/jack-code-server-canary/state/codex:/home/coder/.codex
+      - /opt/jack-code-server-canary/state/claude:/home/coder/.claude
+      - /opt/jack-code-server-canary/state/workspace:/home/coder/project
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8080/healthz"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+    networks:
+      - jack-canary
+
+  caddy:
+    image: caddy:2.10-alpine
+    container_name: jack-code-server-caddy
+    restart: unless-stopped
+    depends_on:
+      jack-code-server:
+        condition: service_healthy
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - jack-caddy-data:/data
+      - jack-caddy-config:/config
+    networks:
+      - jack-canary
+
+networks:
+  jack-canary:
+    name: jack-code-server-canary
+
+volumes:
+  jack-caddy-data:
+  jack-caddy-config:

@@ -1,0 +1,6 @@
+{
+  "extensions.autoCheckUpdates": false,
+  "extensions.autoUpdate": false,
+  "extensions.supportNodeGlobalNavigator": true,
+  "telemetry.telemetryLevel": "off"
+}
